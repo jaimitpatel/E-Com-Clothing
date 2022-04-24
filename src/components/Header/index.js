@@ -1,16 +1,16 @@
 import React from 'react';
 import './styles.scss';
-import Logo from './../../assets/logo.png'
+import Logo from './../../assets/logo.png';
 
-const Header = props => {
+const Header = () => {
     return (
-    <header className="header">
-    <div className='wrapper'>
-        <div className='logo'>
-            {/* <img  src={Logo} alt="Jamie's"/> */}
-        </div>
-    </div>
-    </header>
+        <header className="header">
+            <div className="wrapper">
+                <div className="logo">
+                    <img src={Logo} alt="Jamie's" />
+                </div>
+            </div>
+        </header>
     );
 };
 
