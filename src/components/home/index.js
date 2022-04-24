@@ -6,7 +6,7 @@ import './styles.scss';
 
 const Directory = () => {
     return (
-        <div className="directory">
+        <div className="home">
             <div className="wrap">
                 <div
                     className="choice"
