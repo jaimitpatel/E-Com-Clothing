@@ -8,6 +8,13 @@ body {
     margin: 0;
     padding: 0;
 }
+
+html,
+body,
+#root,
+.App {
+    height: 100%;
+}
 *, ::before, ::after {
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
@@ -23,3 +30,9 @@ a {
     text-decoration: none;
 }
 
+.main {
+    max-width: 1200;
+    width: 100%;
+    padding: 0, 10px;
+    margin: 0 auto;
+}
