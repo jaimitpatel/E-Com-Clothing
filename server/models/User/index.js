@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-export const UserSchema = new mongoose.Schema(
+const UserSchema = new mongoose.Schema(
     {
         username: {
             type: String,
@@ -19,8 +19,7 @@ export const UserSchema = new mongoose.Schema(
         isAdmin: {
             type: Boolean,
             default: false
-        },
-        img: { type: String }
+        }
     },
     { timestamps: true }
 );

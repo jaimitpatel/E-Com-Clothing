@@ -1,70 +1,161 @@
-const { AuthenticationError } = require('apollo-server-express');
-const { signToken } = require('../utils/auth');
-const { User } = require('../models');
+import jwt from 'jsonwebtoken';
+import bcrypt from 'bcryptjs';
+import validator from 'validator';
+import mongoose from 'mongoose';
 
+import CategoryModel from '../models/category';
+import ProductModel from '../models/product';
+import UserModel from '../models/user';
+import { productsPresenter, productPresenter } from '../utils/presenter';
 
-const resolvers = {
-  Query: {
-    me: async (parent, args, context) => {
-      if (context.user) {
-        const userData = await User.findOne({ _id: context.user._id }).select('-__v -password');
-        return userData;
-      }    
-      throw new AuthenticationError('Not logged in');
+const Query = {
+    categories: async () => {
+        const categories = await CategoryModel.find({}).sort([
+            ['createdAt', -1]
+        ]);
+
+        return categories;
     },
-},
+    products: async () => {
+        const products = await ProductModel.find({}).sort([['createdAt', -1]]);
+        const updatedProducts = productsPresenter(products);
 
-  Mutation: {
-    login: async (parent, { email, password }) => {
-      const user = await User.findOne({ email });
-
-      if (!user) {
-        throw new AuthenticationError('Incorrect User');
-      }
-
-      const correctPassword = await user.isCorrectPassword(password);
-
-      if (!correctPassword) {
-        throw new AuthenticationError('Incorrect Password');
-      }
-
-      const token = signToken(user);
-
-      return { token, user };
+        return updatedProducts;
     },
-    addUser: async (parent, args) => {
-      const user = await User.create(args);
-      const token = signToken(user);
+    categoryProducts: async (_, { category_id }) => {
+        try {
+            const category = mongoose.Types.ObjectId(category_id);
+            const products = await ProductModel.find({ category }).sort([
+                ['createdAt', -1]
+            ]);
+            const updatedProducts = productsPresenter(products);
 
-      return { token, user };
+            return updatedProducts;
+        } catch (err) {
+            return { error: err.message };
+        }
     },
-    saveBook: async (parent, { input }, { user }) => {
-      if (user) {
-        const updatedUser = await User.findByIdAndUpdate(
-          { _id: user._id },
-          { $addToSet: { savedBooks: input } },
-          { new: true, runValidators: true }
-        );
+    product: async (_, { product_id }) => {
+        try {
+            const _id = mongoose.Types.ObjectId(product_id);
+            const product = await ProductModel.findById(_id);
+            const updatedProduct = productPresenter(product);
 
-        return updatedUser;
-      }
-
-      throw new AuthenticationError('You need to be logged in!');
-    },
-    removeBook: async (parent, { bookId }, { user }) => {
-      if (user) {
-        const updatedUser = await User.findOneAndUpdate(
-          { _id: user._id },
-          { $pull: { savedBooks: { bookId: bookId } } },
-          { new: true}
-        );
-
-        return updatedUser;
-      }
-
-      throw new AuthenticationError("You have to be logged in!");
+            return updatedProduct;
+        } catch (err) {
+            return { error: err.message };
+        }
     }
-  }
 };
 
-module.exports = resolvers;
+const Mutation = {
+    authLogin: async (_, { email, password }) => {
+        try {
+            const user = await UserModel.findOne({ email });
+
+            if (!user) {
+                return { error: 'Something went wrong.', user };
+            }
+
+            const isEqual = await bcrypt.compare(password, user.password);
+
+            if (!isEqual) {
+                return { error: 'Something went wrong.' };
+            }
+
+            const token = jwt.sign(
+                {
+                    username: user.username,
+                    email: user.email,
+                    userId: user._id.toString()
+                },
+                process.env.JWT_SECRET,
+                { expiresIn: '1d' }
+            );
+
+            return { token, userId: user._id.toString() };
+        } catch (err) {
+            return { error: err.message };
+        }
+    },
+    authSignup: async (_, { firstname, lastname, email, password }) => {
+        const response = { success: false };
+
+        try {
+            const user = await UserModel.findOne({ email });
+
+            if (user) {
+                return {
+                    ...response,
+                    error: 'You cannot create this account!'
+                };
+            }
+
+            const lengthRange = { min: 3, max: 30 };
+            // validate fields
+            if (
+                validator.isEmpty(firstname) ||
+                !validator.isAlpha(firstname) ||
+                !validator.isLength(firstname, lengthRange)
+            ) {
+                return {
+                    ...response,
+                    error: 'Invalid first name!'
+                };
+            }
+
+            if (
+                validator.isEmpty(lastname) ||
+                !validator.isAlpha(lastname) ||
+                !validator.isLength(lastname, lengthRange)
+            ) {
+                return { ...response, error: 'Invalid last name!' };
+            }
+
+            if (!validator.isEmail(email) || validator.isEmpty(email)) {
+                return { ...response, error: 'Invalid email address!' };
+            }
+
+            if (
+                validator.isEmpty(password) ||
+                !password.match(/^[a-zA-Z0-9]{3,30}$/)
+            ) {
+                return {
+                    ...response,
+                    error: 'Invalid password, please use only letters and numbers!'
+                };
+            }
+
+            try {
+                const genSalt = await bcrypt.genSalt(10);
+                const hash = await bcrypt.hash(password, genSalt);
+                const userObj = new UserModel({
+                    firstname,
+                    lastname,
+                    email,
+                    password: hash
+                });
+
+                const savedUser = await userObj.save();
+
+                if (savedUser) {
+                    return { success: true, error: '' };
+                }
+
+                return {
+                    ...response,
+                    error: 'Ooops! could not save your data!'
+                };
+            } catch (err) {
+                return {
+                    ...response,
+                    error: err.message
+                };
+            }
+        } catch (err) {
+            return { ...response, error: err.message };
+        }
+    }
+};
+
+export { Query, Mutation };
