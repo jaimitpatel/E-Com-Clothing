@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
+const { Schema } = mongoose;
 
-export const CartSchema = new mongoose.Schema({
+const CartSchema = new Schema({
     userId: { type: String, required: true },
     products: [
         {
