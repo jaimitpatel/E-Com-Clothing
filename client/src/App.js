@@ -1,50 +1,59 @@
 import React from 'react';
-import { Route, Switch } from 'react-router-dom';
-import './style.scss';
-import { ApolloProvider } from '@apollo/react-hooks';
-import ApolloClient from 'apollo-boost';
-import { Homepage, SignUp } from './pages';
-import { MainLayout, HomeLayout } from './layouts';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import {
+  ApolloClient,
+  InMemoryCache,
+  ApolloProvider,
+  createHttpLink,
+} from '@apollo/client';
+import { setContext } from '@apollo/client/link/context';
+
+import Home from './pages/Home';
+import Detail from './pages/Detail';
+import Login from './pages/Login';
+import Signup from './pages/Signup';
+import Nav from './components/Nav';
+import { StoreProvider } from './utils/GlobalState';
+import OrderHistory from './pages/OrderHistory';
+
+const httpLink = createHttpLink({
+  uri: '/graphql',
+});
+
+const authLink = setContext((_, { headers }) => {
+  const token = localStorage.getItem('id_token');
+  return {
+    headers: {
+      ...headers,
+      authorization: token ? `Bearer ${token}` : '',
+    },
+  };
+});
 
 const client = new ApolloClient({
-    request: (operation) => {
-        const token = localStorage.getItem('id_token');
-
-        operation.setContext({
-            headers: {
-                authorization: token ? `Bearer ${token}` : ''
-            }
-        });
-    },
-    uri: '/graphql'
+  link: authLink.concat(httpLink),
+  cache: new InMemoryCache(),
 });
 
 function App() {
-    return (
-        <ApolloProvider client={client}>
-            <div className="App">
-                <Switch>
-                    <Route
-                        exact
-                        path="/"
-                        render={() => (
-                            <HomeLayout>
-                                <Homepage />
-                            </HomeLayout>
-                        )}
-                    />
-                    <Route
-                        path="/signup"
-                        render={() => (
-                            <MainLayout>
-                                <SignUp />
-                            </MainLayout>
-                        )}
-                    />
-                </Switch>
-            </div>
-        </ApolloProvider>
-    );
+  return (
+    <ApolloProvider client={client}>
+      <Router>
+        <div>
+          <StoreProvider>
+            <Nav />
+            <Routes>
+              <Route path='/' element={<Home />} />
+              <Route path='/login' element={<Login />} />
+              <Route path='/signup' element={<Signup />} />
+              <Route path='/orderHistory' element={<OrderHistory />} />
+              <Route path='/products/:id' element={<Detail />} />
+            </Routes>
+          </StoreProvider>
+        </div>
+      </Router>
+    </ApolloProvider>
+  );
 }
 
 export default App;

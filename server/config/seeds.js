@@ -2,155 +2,190 @@ const db = require('./connection');
 const { User, Product, Category } = require('../models');
 
 db.once('open', async () => {
-    await Category.deleteMany();
+  await Category.deleteMany();
 
-    const categories = await Category.insertMany([
-        { name: 'Jacket' },
-        { name: 'Hoodie' },
-        { name: 'Socks' },
-        { name: 'Shoes' },
-        { name: 'Hat' }
-    ]);
+  const categories = await Category.insertMany([
+    { name: "men's Clothing" },
+    { name: "women's clothing" },
+    { name: 'jewelery' },
+    { name: 'electronics' },
+  ]);
 
-    console.log('categories seeded');
+  console.log('categories seeded');
 
-    await Product.deleteMany();
+  await Product.deleteMany();
 
-    const products = await Product.insertMany([
-        {
-            name: 'Tin of Cookies',
-            description:
-                'Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.',
-            image: 'cookie-tin.jpg',
-            category: categories[0]._id,
-            price: 2.99,
-            quantity: 500
-        },
-        {
-            name: 'Canned Coffee',
-            description:
-                'Praesent sed lacinia mauris. Nulla congue nibh magna, at feugiat nunc scelerisque quis. Donec iaculis rutrum vulputate. Suspendisse lectus sem, vulputate ac lectus sed, placerat consequat dui.',
-            image: 'canned-coffee.jpg',
-            category: categories[0]._id,
-            price: 1.99,
-            quantity: 500
-        },
-        {
-            name: 'Toilet Paper',
-            category: categories[1]._id,
-            description:
-                'Donec volutpat erat erat, sit amet gravida justo sodales in. Phasellus tempus euismod urna. Proin ultrices nisi ut ipsum congue, vitae porttitor libero suscipit. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Aliquam lacinia a nisi non congue.',
-            image: 'toilet-paper.jpg',
-            price: 7.99,
-            quantity: 20
-        },
-        {
-            name: 'Handmade Soap',
-            category: categories[1]._id,
-            description:
-                'Praesent placerat, odio vel euismod venenatis, lectus arcu laoreet felis, et fringilla sapien turpis vestibulum nisl.',
-            image: 'soap.jpg',
-            price: 3.99,
-            quantity: 50
-        },
-        {
-            name: 'Set of Wooden Spoons',
-            category: categories[1]._id,
-            description:
-                'Vivamus ut turpis in purus pretium mollis. Donec turpis odio, semper vel interdum ut, vulputate at ex. Duis dignissim nisi vel tortor imperdiet finibus. Aenean aliquam sagittis rutrum.',
-            image: 'wooden-spoons.jpg',
-            price: 14.99,
-            quantity: 100
-        },
-        {
-            name: 'Camera',
-            category: categories[2]._id,
-            description:
-                'Vestibulum risus metus, luctus non tortor quis, tincidunt consectetur ex. Nullam vitae lobortis ligula, ut sagittis massa. Curabitur consectetur, tellus at pulvinar venenatis, erat augue cursus erat, eu ullamcorper eros lectus ultrices ipsum. Integer rutrum, augue vitae auctor venenatis, turpis turpis elementum orci, at sagittis risus mi a leo.',
-            image: 'camera.jpg',
-            price: 399.99,
-            quantity: 30
-        },
-        {
-            name: 'Tablet',
-            category: categories[2]._id,
-            description:
-                'In sodales, ipsum quis ultricies porttitor, tellus urna aliquam arcu, eget venenatis purus ligula ut nisi. Fusce ut felis dolor. Mauris justo ante, aliquet non tempus in, tempus ac lorem. Aliquam lacinia dolor eu sem eleifend ultrices. Etiam mattis metus metus. Sed ligula dui, placerat non turpis vitae, suscipit volutpat elit. Phasellus sagittis, diam elementum suscipit fringilla, libero mauris scelerisque ex, ac interdum diam erat non sapien.',
-            image: 'tablet.jpg',
-            price: 199.99,
-            quantity: 30
-        },
-        {
-            name: 'Tales at Bedtime',
-            category: categories[3]._id,
-            description:
-                'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum ornare diam quis eleifend rutrum. Aliquam nulla est, volutpat non enim nec, pharetra gravida augue. Donec vitae dictum neque. Pellentesque arcu lorem, fringilla non ligula ac, tristique bibendum erat. Ut a semper nibh. Quisque a mi et mi tempor ultricies. Maecenas eu ipsum eu enim hendrerit accumsan at euismod urna.',
-            image: 'bedtime-book.jpg',
-            price: 9.99,
-            quantity: 100
-        },
-        {
-            name: 'Spinning Top',
-            category: categories[4]._id,
-            description:
-                'Ut vulputate hendrerit nibh, a placerat elit cursus interdum.',
-            image: 'spinning-top.jpg',
-            price: 1.99,
-            quantity: 1000
-        },
-        {
-            name: 'Set of Plastic Horses',
-            category: categories[4]._id,
-            description:
-                'Sed a mauris condimentum, elementum enim in, rhoncus dui. Phasellus lobortis leo odio, sit amet pharetra turpis porta quis.',
-            image: 'plastic-horses.jpg',
-            price: 2.99,
-            quantity: 1000
-        },
-        {
-            name: 'Teddy Bear',
-            category: categories[4]._id,
-            description:
-                'Vestibulum et erat finibus erat suscipit vulputate sed vitae dui. Ut laoreet tellus sit amet justo bibendum ultrices. Donec vitae felis vestibulum, congue augue eu, finibus turpis.',
-            image: 'teddy-bear.jpg',
-            price: 7.99,
-            quantity: 100
-        },
-        {
-            name: 'Alphabet Blocks',
-            category: categories[4]._id,
-            description:
-                'Morbi consectetur viverra urna, eu fringilla turpis faucibus sit amet. Suspendisse potenti. Donec at dui ac sapien eleifend hendrerit vel sit amet lectus.',
-            image: 'alphabet-blocks.jpg',
-            price: 9.99,
-            quantity: 600
-        }
-    ]);
+  const products = await Product.insertMany([
+    {
+      name: 'Fjallraven - Foldsack No. 1 Backpack, Fits 15 Laptops',
+      price: 109.95,
+      description:
+        'Your perfect pack for everyday use and walks in the forest. Stash your laptop (up to 15 inches) in the padded sleeve, your everyday',
+      category: categories[0]._id,
+      image: '81fPKd-2AYL._AC_SL1500_.jpg',
+      quantity: 20,
+    },
+    {
+      name: 'Mens Casual Premium Slim Fit T-Shirts ',
+      price: 22.3,
+      description:
+        'Slim-fitting style, contrast raglan long sleeve, three-button henley placket, light weight & soft fabric for breathable and comfortable wearing. And Solid stitched shirts with round neck made for durability and a great fit for casual fashion wear and diehard baseball fans. The Henley style round neckline includes a three-button placket.',
+      category: categories[0]._id,
+      image: '71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg',
+      quantity: 20,
+    },
+    {
+      name: 'Mens Cotton Jacket',
+      price: 55.99,
+      description:
+        'great outerwear jackets for Spring/Autumn/Winter, suitable for many occasions, such as working, hiking, camping, mountain/rock climbing, cycling, traveling or other outdoors. Good gift choice for you or your family member. A warm hearted love to Father, husband or son in this thanksgiving or Christmas Day.',
+      category: categories[0]._id,
+      image: '71li-ujtlUL._AC_UX679_.jpg',
+      quantity: 20,
+    },
+    {
+      name: 'Mens Casual Slim Fit',
+      price: 15.99,
+      description:
+        'The color could be slightly different between on the screen and in practice. / Please note that body builds vary by person, therefore, detailed size information should be reviewed below on the product description.',
+      category: categories[0]._id,
+      image: '71YXzeOuslL._AC_UY879_.jpg',
+      quantity: 20,
+    },
+    {
+      name: "John Hardy Women's Legends Naga Gold & Silver Dragon Station Chain Bracelet",
+      price: 695,
+      description:
+        "From our Legends Collection, the Naga was inspired by the mythical water dragon that protects the ocean's pearl. Wear facing inward to be bestowed with love and abundance, or outward for protection.",
+      category: categories[2]._id,
+      image: '71pWzhdJNwL._AC_UL640_QL65_ML3_.jpg',
+      quantity: 20,
+    },
+    {
+      name: 'Solid Gold Petite Micropave ',
+      price: 168,
+      description:
+        'Satisfaction Guaranteed. Return or exchange any order within 30 days.Designed and sold by Hafeez Center in the United States. Satisfaction Guaranteed. Return or exchange any order within 30 days.',
+      category: categories[2]._id,
+      image: '61sbMiUnoGL._AC_UL640_QL65_ML3_.jpg',
+      quantity: 20,
+    },
+    {
+      name: 'White Gold Plated Princess',
+      price: 9.99,
+      description:
+        "Classic Created Wedding Engagement Solitaire Diamond Promise Ring for Her. Gifts to spoil your love more for Engagement, Wedding, Anniversary, Valentine's Day...",
+      category: categories[2]._id,
+      image: '71YAIFU48IL._AC_UL640_QL65_ML3_.jpg',
+      quantity: 20,
+    },
+    {
+      name: 'Pierced Owl Rose Gold Plated Stainless Steel Double',
+      price: 10.99,
+      description:
+        'Rose Gold Plated Double Flared Tunnel Plug Earrings. Made of 316L Stainless Steel',
+      category: categories[2]._id,
+      image: '51UDEzMJVpL._AC_UL640_QL65_ML3_.jpg',
+      quantity: 20,
+    },
+    {
+      name: 'WD 2TB Elements Portable External Hard Drive - USB 3.0 ',
+      price: 64,
+      description:
+        'USB 3.0 and USB 2.0 Compatibility Fast data transfers Improve PC Performance High Capacity; Compatibility Formatted NTFS for Windows 10, Windows 8.1, Windows 7; Reformatting may be required for other operating systems; Compatibility may vary depending on user’s hardware configuration and operating system',
+      category: categories[3]._id,
+      image: '61IBBVJvSDL._AC_SY879_.jpg',
+      quantity: 20,
+    },
+    {
+      name: 'SanDisk SSD PLUS 1TB Internal SSD - SATA III 6 Gb/s',
+      price: 109,
+      description:
+        'Easy upgrade for faster boot up, shutdown, application load and response (As compared to 5400 RPM SATA 2.5” hard drive; Based on published specifications and internal benchmarking tests using PCMark vantage scores) Boosts burst write performance, making it ideal for typical PC workloads The perfect balance of performance and reliability Read/write speeds of up to 535MB/s/450MB/s (Based on internal testing; Performance may vary depending upon drive capacity, host device, OS and application.)',
+      category: categories[3]._id,
+      image: '61U7T1koQqL._AC_SX679_.jpg',
+      quantity: 20,
+    },
+    {
+      name: 'Silicon Power 256GB SSD 3D NAND A55 SLC Cache Performance Boost SATA III 2.5',
+      price: 109,
+      description:
+        '3D NAND flash are applied to deliver high transfer speeds Remarkable transfer speeds that enable faster bootup and improved overall system performance. The advanced SLC Cache Technology allows performance boost and longer lifespan 7mm slim design suitable for Ultrabooks and Ultra-slim notebooks. Supports TRIM command, Garbage Collection technology, RAID, and ECC (Error Checking & Correction) to provide the optimized performance and enhanced reliability.',
+      category: categories[3]._id,
+      image: '71kWymZ+c+L._AC_SX679_.jpg',
+      quantity: 20,
+    },
+    {
+      name: 'WD 4TB Gaming Drive Works with Playstation 4 Portable External Hard Drive',
+      price: 114,
+      description:
+        "Expand your PS4 gaming experience, Play anywhere Fast and easy, setup Sleek design with high capacity, 3-year manufacturer's limited warranty",
+      category: categories[3]._id,
+      image: '61mtL65D4cL._AC_SX679_.jpg',
+      quantity: 20,
+    },
+    {
+      name: "BIYLACLESEN Women's 3-in-1 Snowboard Jacket Winter Coats",
+      price: 56.99,
+      description:
+        'Note:The Jackets is US standard size, Please choose size as your usual wear Material: 100% Polyester; Detachable Liner Fabric: Warm Fleece. Detachable Functional Liner: Skin Friendly, Lightweigt and Warm.Stand Collar Liner jacket, keep you warm in cold weather. Zippered Pockets: 2 Zippered Hand Pockets, 2 Zippered Pockets on Chest (enough to keep cards or keys)and 1 Hidden Pocket Inside.Zippered Hand Pockets and Hidden Pocket keep your things secure. Humanized Design: Adjustable and Detachable Hood and Adjustable cuff to prevent the wind and water,for a comfortable fit. 3 in 1 Detachable Design provide more convenience, you can separate the coat and inner as needed, or wear it together. It is suitable for different season and help you adapt to different climates',
+      category: categories[1]._id,
+      image: '51Y5NI-I5jL._AC_UX679_.jpg',
+      quantity: 20,
+    },
+    {
+      name: "Lock and Love Women's Removable Hooded Faux Leather Moto Biker Jacket",
+      price: 29.95,
+      description:
+        '100% POLYURETHANE(shell) 100% POLYESTER(lining) 75% POLYESTER 25% COTTON (SWEATER), Faux leather material for style and comfort / 2 pockets of front, 2-For-One Hooded denim style faux leather jacket, Button detail on waist / Detail stitching at sides, HAND WASH ONLY / DO NOT BLEACH / LINE DRY / DO NOT IRON',
+      category: categories[1]._id,
+      image: '81XH0e8fefL._AC_UY879_.jpg',
+      quantity: 20,
+    },
+    {
+      name: 'Rain Jacket Women Windbreaker Striped Climbing Raincoats',
+      price: 39.99,
+      description:
+        "Lightweight perfet for trip or casual wear---Long sleeve with hooded, adjustable drawstring waist design. Button and zipper front closure raincoat, fully stripes Lined and The Raincoat has 2 side pockets are a good size to hold all kinds of things, it covers the hips, and the hood is generous but doesn't overdo it.Attached Cotton Lined Hood with Adjustable Drawstrings give it a real styled look.",
+      category: categories[1]._id,
+      image: '71HblAHs5xL._AC_UY879_-2.jpg',
+      quantity: 20,
+    },
+    {
+      name: "MBJ Women's Solid Short Sleeve Boat Neck V ",
+      price: 9.85,
+      description:
+        '95% RAYON 5% SPANDEX, Made in USA or Imported, Do Not Bleach, Lightweight fabric with great stretch for comfort, Ribbed on sleeves and neckline / Double stitching on bottom hem',
+      category: categories[1]._id,
+      image: '71z3kpMAYsL._AC_UY879_.jpg',
+      quantity: 20,
+    },
+  ]);
 
-    console.log('products seeded');
+  console.log('products seeded');
 
-    await User.deleteMany();
+  await User.deleteMany();
 
-    await User.create({
-        firstName: 'Pamela',
-        lastName: 'Washington',
-        email: 'pamela@testmail.com',
-        password: 'password12345',
-        orders: [
-            {
-                products: [products[0]._id, products[0]._id, products[1]._id]
-            }
-        ]
-    });
+  await User.create({
+    firstName: 'Jaimit',
+    lastName: 'Patel',
+    email: 'jaimit@testmail.com',
+    password: 'jaimit',
+    orders: [
+      {
+        products: [products[0]._id, products[0]._id, products[1]._id],
+      },
+    ],
+  });
 
-    await User.create({
-        firstName: 'Elijah',
-        lastName: 'Holt',
-        email: 'eholt@testmail.com',
-        password: 'password12345'
-    });
+  await User.create({
+    firstName: 'Test',
+    lastName: 'Dummy',
+    email: 'test@testmail.com',
+    password: 'password',
+  });
 
-    console.log('users seeded');
+  console.log('users seeded');
 
-    process.exit();
+  process.exit();
 });
