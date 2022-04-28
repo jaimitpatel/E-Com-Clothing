@@ -40,7 +40,7 @@ function ProductItem(item) {
                     height="400px"
                     width="400px"
                 />
-                <p className="namefont">{name}</p>
+                <p>{name}</p>
             </Link>
             <div>
                 <div>

@@ -12,7 +12,7 @@ import Home from './pages/Home';
 import Detail from './pages/Detail';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
-import Navbar from './components/Nav';
+import Nav from './components/Nav';
 import { StoreProvider } from './utils/GlobalState';
 import OrderHistory from './pages/OrderHistory';
 
@@ -41,9 +41,9 @@ function App() {
             <Router>
                 <div>
                     <StoreProvider>
-                        <Navbar />
+                        <Nav />
                         <Routes>
-                            <Route path="/" exact element={<Home />} />
+                            <Route path="/" element={<Home />} />
                             <Route path="/login" element={<Login />} />
                             <Route path="/signup" element={<Signup />} />
                             <Route
